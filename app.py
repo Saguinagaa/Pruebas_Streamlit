@@ -10,7 +10,9 @@ def calculate_amortization(interest_rate, months, loan_amount):
     monthly_payment = (loan_amount * monthly_interest_rate) / (1 - (1 + monthly_interest_rate) ** -months)
     
     # Creating a DataFrame for the amortization schedule
-    amortization_schedule = pd.DataFrame(columns=['Month', 'Payment', 'Principal', 'Interest', 'Remaining Balance'])
+    amortization_schedule = pd.DataFrame(
+        columns=['Month','Payment', 'Principal',
+                 'Interest', 'Remaining Balance'])
     remaining_balance = loan_amount
     
     for month in range(1, months + 1):
@@ -25,19 +27,25 @@ def calculate_amortization(interest_rate, months, loan_amount):
             'Interest': interest,
             'Remaining Balance': remaining_balance
         }, ignore_index=True)
-    
+
+    amortization_schedule.rename(["Mes", "Pago", "Abono a deuda",
+                                  "Abono a interes", "Deuda actual"])
     return monthly_payment, amortization_schedule
 
 # Streamlit app
 st.title('Calculadora de Préstamos y Amortización')
 
 # User input for loan details
-interest_rate = st.number_input('Tasa de interés anual (%)', min_value=0.01, value=5.0, step=0.01)
-months = st.number_input('Número de meses', min_value=1, value=12, step=1)
-loan_amount = st.number_input('Monto del préstamo', min_value=1.0, value=1000.0, step=1.0)
+interest_rate = st.number_input('Tasa de interés anual (%)',
+                                min_value=0.01, value=5.0, step=0.01)
+months = st.number_input('Número de meses', min_value=1,
+                         value=12, step=1)
+loan_amount = st.number_input('Monto del préstamo',
+                              min_value=1.0, value=1000.0, step=1.0)
 
 if st.button('Calcular'):
-    monthly_payment, amortization_table = calculate_amortization(interest_rate, months, loan_amount)
+    monthly_payment, amortization_table = calculate_amortization(
+        interest_rate, months, loan_amount)
     
     st.subheader('Detalles del Préstamo')
     st.write(f'Monto del préstamo: {loan_amount}')
@@ -47,4 +55,3 @@ if st.button('Calcular'):
     
     st.subheader('Tabla de Amortización')
     st.write(amortization_table)
-
