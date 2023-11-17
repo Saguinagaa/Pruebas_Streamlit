@@ -28,7 +28,7 @@ def calculate_amortization(interest_rate, months, loan_amount):
             'Remaining Balance': remaining_balance
         }, ignore_index=True)
         
-    amortization_schedule.rename({"Month": "Mes", "Payment": "Pago",
+    amortization_schedule.rename(columns={"Month": "Mes", "Payment": "Pago",
                                   "Pricipal": "Abono a deuda", "Interest": "Abono a interes",
                                   "remaining_balance": "Deuda actual"})
     return monthly_payment, amortization_schedule
