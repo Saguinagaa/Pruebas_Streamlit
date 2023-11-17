@@ -2,6 +2,14 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
+def nominal_to_effective(nominal_rate, periods_per_year):
+    effective_rate = (1 + (nominal_rate / periods_per_year)) ** periods_per_year - 1
+    return effective_rate
+
+def effective_to_nominal(effective_rate, periods_per_year):
+    nominal_rate = periods_per_year * ((1 + effective_rate) ** (1 / periods_per_year) - 1)
+    return nominal_rate
+
 def calculate_amortization(interest_rate, months, loan_amount):
     # Calculating the monthly interest rate
     monthly_interest_rate = interest_rate / 12 / 100
@@ -18,7 +26,7 @@ def calculate_amortization(interest_rate, months, loan_amount):
         principal = monthly_payment - interest
         remaining_balance -= principal
         
-        amortization_schedule = amortization_schedule._append({
+        amortization_schedule = amortization_schedule.append({
             'Month': month,
             'Payment': monthly_payment,
             'Principal': principal,
@@ -35,6 +43,18 @@ st.title('Calculadora de Préstamos y Amortización')
 interest_rate = st.number_input('Tasa de interés anual (%)', min_value=0.01, value=5.0, step=0.01)
 months = st.number_input('Número de meses', min_value=1, value=12, step=1)
 loan_amount = st.number_input('Monto del préstamo', min_value=1.0, value=1000.0, step=1.0)
+
+conversion_type = st.radio('Seleccione el tipo de conversión de tasa de interés:', ('Nominal a Efectiva', 'Efectiva a Nominal'))
+
+if conversion_type == 'Nominal a Efectiva':
+    periods_per_year = st.number_input('Número de periodos por año', min_value=1, value=12, step=1)
+    effective_rate = nominal_to_effective(interest_rate, periods_per_year)
+    st.write(f'Tasa efectiva correspondiente: {effective_rate:.4f} %')
+
+if conversion_type == 'Efectiva a Nominal':
+    periods_per_year = st.number_input('Número de periodos por año', min_value=1, value=12, step=1)
+    nominal_rate = effective_to_nominal(interest_rate, periods_per_year)
+    st.write(f'Tasa nominal correspondiente: {nominal_rate:.4f} %')
 
 if st.button('Calcular'):
     monthly_payment, amortization_table = calculate_amortization(interest_rate, months, loan_amount)
