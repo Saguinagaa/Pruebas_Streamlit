@@ -27,9 +27,10 @@ def calculate_amortization(interest_rate, months, loan_amount):
             'Interest': interest,
             'Remaining Balance': remaining_balance
         }, ignore_index=True)
-
-    amortization_schedule.rename(["Mes", "Pago", "Abono a deuda",
-                                  "Abono a interes", "Deuda actual"])
+        
+    amortization_schedule.rename({"Month": "Mes", "Payment": "Pago",
+                                  "Pricipal": "Abono a deuda", "Interest": "Abono a interes",
+                                  "remaining_balance": "Deuda actual"})
     return monthly_payment, amortization_schedule
 
 # Streamlit app
