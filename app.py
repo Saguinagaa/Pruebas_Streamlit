@@ -18,7 +18,7 @@ def calculate_amortization(interest_rate, months, loan_amount):
         principal = monthly_payment - interest
         remaining_balance -= principal
         
-        amortization_schedule = amortization_schedule.append({
+        amortization_schedule = amortization_schedule._append({
             'Month': month,
             'Payment': monthly_payment,
             'Principal': principal,
